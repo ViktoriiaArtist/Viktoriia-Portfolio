@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viktoriia Yaremenko · Art Portfolio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #d4a5a5;      /* Нежный розово-золотой акцент */
+            --accent-dark: #b88888;
+            --text: #2d2a2e;
+            --text-light: #6a5e6b;
+            --bg-overlay: rgba(255, 248, 245, 0.3);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #e8ddd0;
+            margin: 0;
+        
+        }
+
+        /* Фон с плавной сменой картинок */
+        .art-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 0;
+            pointer-events: none;
+            object-fit: cover;
+        
+        }
+        
+        /* Легкая затемняющая подложка для читаемости текста */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.15);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            height: 100vh;
+            min-height: 620px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: 35px;
+            right: 6%;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3rem;
+            color: rgba(45,42,46,0.35);
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.92);
+            animation: logoAppear 5.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+
+        @keyframes logoAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .avatar-frame {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid rgba(255,250,240,0.9);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            background: rgba(255,250,240,0.4);
+            animation: fadeSlideUp 0.8s ease-out forwards;
+        }
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 15%;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 7vw, 4.5rem);
+            color: white;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+            margin-bottom: 0.3rem;
+            animation: fadeSlideUp 0.8s 0.3s ease-out forwards;
+            opacity: 0;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: rgba(255,250,240,0.95);
+            letter-spacing: 2px;
+            animation: fadeSlideUp 0.8s 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .card {
+            background: rgba(255,250,240,0.3);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 2rem 2rem;
+            margin: 2.5rem 0;
+            border: 1px solid rgba(255,250,240,0.5);
+            transition: transform 0.3s ease, background 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            background: rgba(255,250,240,0.45);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 2px;
+            background: var(--accent);
+            margin: 0.8rem auto 0;
+        }
+
+        /* Сетка для работ — 4 колонки на больших, 3 на средних, 2 на маленьких */
+        .artworks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+        }
+        
+        /* Карточка работы */
+        .art-card {
+            background: rgba(255, 250, 240, 0.15);  /* Светлый фон */
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            border: 1px solid rgba(212, 165, 165, 0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .art-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            background: rgba(255, 250, 240, 0.25);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.15);
+            border-color: rgba(212, 165, 165, 0.8);
+        }
+        
+        /* Изображение в карточке */
+        .art-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+            opacity: 1 !important;  /* видимость */
+            visibility: visible !important;
+        }
+        
+        .art-card:hover .art-image {
+            transform: scale(1.02);
+        }
+        
+        /* Информация под изображением */
+        .art-info {
+            background: rgba(255, 250, 240, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 1rem 1.2rem 1.3rem;
+            margin: 12px;
+            border-radius: 16px;
+        }
+                
+        .art-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #2d2a2e;
+        }
+        
+        .art-medium {
+            font-size: 0.75rem;
+            color: #b88888;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .art-desc {
+            font-size: 0.85rem;
+            color: #5a4e5b;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .about-text {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            margin-top: 1rem;
+            color: var(--accent-dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            background: rgba(255,250,240,0.2);
+            border-radius: 40px;
+            margin-top: 1rem;
+        }
+
+        /* Анимация появления секций при скролле */
+        section {
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @keyframes fadeSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Кастомный скролл */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(210,180,160,0.3);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 700px) {
+            .artworks-grid {
+                gap: 1.2rem;
+            }
+            .card {
+                padding: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Фоновые слои с автоматической сменой картин (имитация живого фона) -->
+<div class="art-bg" id="bg1"></div>
+<div class="art-bg" id="bg2"></div>
+<div class="art-bg" id="bg3"></div>
+<div class="overlay"></div>
+
+<div class="content">
+    <div class="hero">
+        <div class="logo">VY</div>
+        <div>
+            <div class="avatar-frame">
+                <img src="images/avatar.jpg" alt="Viktoriia Yaremenko" class="avatar">
+            </div>
+            <h1>Viktoriia Yaremenko</h1>
+            <div class="tagline">Painter · Visual Artist · Creator of Emotions</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Секция о художнице -->
+        <section>
+            <div class="card">
+                <h2 class="section-title">Artistic Vision</h2>
+                <div class="about-text">
+                    <p>Viktoriia creates paintings that speak to the soul, blending classical techniques with contemporary sensitivity. Her work explores light, memory, and the subtle spaces between dream and reality. Based in Switzerland, exhibited across Europe.</p>
+                    <div class="signature">— art as a silent poem —</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция с работами – парят при скролле -->
+        <section>
+            <div class="card">
+                <h2 class="section-title">Portfolio</h2>
+                <div class="artworks-grid" id="artworksGrid">
+                </div>
+                <p style="text-align: center; margin-top: 2rem; font-size: 0.8rem; color: var(--text-light);">✧ нажмите на любую работу для увеличения ✧</p>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section>
+            <div class="card" style="text-align: center;">
+                <h2 class="section-title">Connect</h2>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin: 1.2rem 0;">
+                    <a href="#" style="color: var(--text); text-decoration: none; font-weight: 500;">Instagram</a>
+                    <a href="#" style="color: var(--text); text-decoration: none; font-weight: 500;">Behance</a>
+                    <a href="mailto:nikkiemo1234@gmail.com" style="color: var(--text); text-decoration: none; font-weight: 500;">Email</a>
+                </div>
+                <p style="font-size: 0.85rem;">For commissions & collaborations</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        © 2026 Viktoriia Yaremenko — Art Portfolio
+    </footer>
+</div>
+
+<script>
+    // Данные всех работ 
+    const artworks = [
+        { file: 'work_1.jpg',  w: 996,  h: 1135, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Exploration of inner landscapes' },
+        { file: 'work_2.jpg',  w: 799,  h: 670,  title: 'Öl auf Leinwand',                            medium: 'Oil on Canvas',             year: '2017-2025', desc: 'Series inspired by Nordic light' },
+        { file: 'work_3.jpg',  w: 1126, h: 1280, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: "Part of 'Emotional Cartography'" },
+        { file: 'work_4.jpg',  w: 1280, h: 960,  title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: "From the 'Memory Layers' cycle" },
+        { file: 'work_5.jpg',  w: 1280, h: 1280, title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2025',      desc: 'Meditation on form and color' },
+        { file: 'work_6.jpg',  w: 960,  h: 1280, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Contemporary expressionism' },
+        { file: 'work_7.jpg',  w: 1120, h: 1280, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Study in contrasts' },
+        { file: 'work_8.jpg',  w: 1280, h: 1280, title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2023',      desc: 'Private collection highlight' },
+        { file: 'work_9.jpg',  w: 1280, h: 1048, title: 'Öl auf Leinwand',                            medium: 'Oil on Canvas',             year: '2017-2025', desc: 'Exploration of inner landscapes' },
+        { file: 'work_10.jpg', w: 961,  h: 1280, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Series inspired by Nordic light' },
+        { file: 'work_11.jpg', w: 1280, h: 1280, title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2022',      desc: "Part of 'Emotional Cartography'" },
+        { file: 'work_12.jpg', w: 960,  h: 1280, title: 'Öl auf Leinwand',                            medium: 'Oil on Canvas',             year: '2017-2025', desc: "From the 'Memory Layers' cycle" },
+        { file: 'work_13.jpg', w: 1280, h: 959,  title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Meditation on form and color' },
+        { file: 'work_14.jpg', w: 1024, h: 1280, title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2022',      desc: 'Contemporary expressionism' },
+        { file: 'work_15.jpg', w: 1280, h: 957,  title: 'Öl auf Leinwand',                            medium: 'Oil on Canvas',             year: '2017-2025', desc: 'Study in contrasts' },
+        { file: 'work_16.jpg', w: 1280, h: 960,  title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2024',      desc: 'Private collection highlight' },
+        { file: 'work_17.jpg', w: 959,  h: 1280, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Exploration of inner landscapes' },
+        { file: 'work_18.jpg', w: 864,  h: 702,  title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2019',      desc: 'Series inspired by Nordic light' },
+        { file: 'work_19.jpg', w: 944,  h: 1280, title: 'Незламна Киця, Буча 2022',                   medium: 'Digital Art (Procreate)',   year: '2022',      desc: 'Unzerbrechliche Katze, Butscha 2022' },
+        { file: 'work_20.jpg', w: 1280, h: 1280, title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2023',      desc: "Part of 'Emotional Cartography'" },
+        { file: 'work_21.jpg', w: 1057, h: 1280, title: 'Digitale Illustration (Procreate)',           medium: 'Digital Art (Procreate)',   year: '2020',      desc: "From the 'Memory Layers' cycle" },
+        { file: 'work_22.jpg', w: 969,  h: 1280, title: 'Acryl auf Leinwand',                         medium: 'Acrylic on Canvas',         year: '2020-2025', desc: 'Meditation on form and color' },
+        { file: 'work_23.jpg', w: 960,  h: 1280, title: 'Acryl auf Leinwand',                         medium: 'Acrylic on Canvas',         year: '2020-2025', desc: 'Contemporary expressionism' },
+        { file: 'work_24.jpg', w: 355,  h: 369,  title: 'Acryl auf Leinwand',                         medium: 'Acrylic on Canvas',         year: '2020-2025', desc: 'Study in contrasts' },
+        { file: 'work_25.jpg', w: 463,  h: 448,  title: 'Acryl auf Leinwand',                         medium: 'Acrylic on Canvas',         year: '2020-2025', desc: 'Private collection highlight' },
+        { file: 'work_26.jpg', w: 1280, h: 308,  title: 'Bemalung Aussenwand Kindergarten',            medium: 'Weatherproof Paint',        year: '2018',      desc: 'Outdoor mural, Kindergarten' },
+        { file: 'work_27.jpg', w: 1024, h: 1280, title: 'Malerei auf Stoff',                          medium: 'Painting on Fabric',        year: '2020',      desc: 'Exploration of inner landscapes' },
+        { file: 'work_28.jpg', w: 1130, h: 1280, title: 'Öl auf Leinwand',                            medium: 'Oil on Canvas',             year: '2017-2025', desc: 'Series inspired by Nordic light' },
+        { file: 'work_29.jpg', w: 1118, h: 1280, title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: "Part of 'Emotional Cartography'" },
+        { file: 'work_30.jpg', w: 807,  h: 720,  title: 'Malerei auf Stoff',                          medium: 'Painting on Fabric',        year: '2019',      desc: "From the 'Memory Layers' cycle" },
+        { file: 'work_31.jpg', w: 960,  h: 1280, title: 'Malerei auf Stoff',                          medium: 'Painting on Fabric',        year: '2024',      desc: 'Meditation on form and color' },
+        { file: 'work_32.jpg', w: 1280, h: 889,  title: 'Farbstiftzeichnung auf Papier',              medium: 'Colored Pencil on Paper',   year: '2021-2026', desc: 'Contemporary expressionism' },
+        { file: 'work_33.jpg', w: 1280, h: 960,  title: 'Malerei auf Stoff',                          medium: 'Painting on Fabric',        year: '2016',      desc: 'Study in contrasts' },
+        { file: 'work_34.jpg', w: 1280, h: 870,  title: 'Öl auf Leinwand',                            medium: 'Oil on Canvas',             year: '2017-2025', desc: 'Private collection highlight' }
+    ];
+
+    // Фон — смена всех картин
+    let bgIndex = 0;
+    const bgLayers = [
+        document.getElementById('bg1'),
+        document.getElementById('bg2'),
+        document.getElementById('bg3')
+    ];
+
+    function isVertical(w, h) {
+        return h > w;
+    }
+
+    function setBgLayer(layer, artwork) {
+        layer.style.backgroundImage = `url('images/${artwork.file}')`;
+        layer.style.backgroundColor = '#b8afa5';
+        
+        if (artwork.w < 500 || artwork.h < 500) {
+            // Маленькие картинки — не растягиваем
+            layer.style.backgroundSize = 'auto';
+        } else if (isVertical(artwork.w, artwork.h)) {
+            layer.style.backgroundSize = 'contain';
+        } else {
+            layer.style.backgroundSize = 'cover';
+        }
+        layer.style.backgroundPosition = 'center';
+        layer.style.backgroundRepeat = 'no-repeat';
+    }
+
+    // Инициализация
+    bgLayers.forEach((layer, i) => {
+        layer.style.transition = 'opacity 1.5s ease-in-out';
+        if (i === 0) {
+            layer.style.opacity = '1';
+            setBgLayer(layer, artworks[0]);
+        } else {
+            layer.style.opacity = '0';
+        }
+    });
+
+    // Смена фона
+    setInterval(() => {
+        bgIndex = (bgIndex + 1) % artworks.length;
+        
+        // Находим неактивный слой
+        let targetLayer;
+        for (let layer of bgLayers) {
+            if (layer.style.opacity === '0' || layer.style.opacity === '') {
+                targetLayer = layer;
+                break;
+            }
+        }
+        
+        if (targetLayer) {
+            setBgLayer(targetLayer, artworks[bgIndex]);
+            targetLayer.style.opacity = '1';
+            
+            // Прячем предыдущий
+            for (let layer of bgLayers) {
+                if (layer !== targetLayer) {
+                    layer.style.opacity = '0';
+                }
+            }
+        }
+    }, 7000);
+
+    
+    // Создание карточек
+    const container = document.getElementById('artworksGrid');
+    if (!container) {
+        console.error('Container #artworksGrid not found!');
+    } else {
+        artworks.forEach((art, index) => {
+            const artCard = document.createElement('div');
+            artCard.className = 'art-card';
+            
+            const img = document.createElement('img');
+            img.className = 'art-image';
+            img.src = `images/${art.file}`;
+            img.alt = art.title;
+            img.loading = 'lazy';
+            
+            img.onload = () => console.log(`✅ Loaded: ${art.file}`);
+            img.onerror = () => console.warn(`❌ Missing: ${art.file}`);
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'art-info';
+            
+            const titleSpan = document.createElement('div');
+            titleSpan.className = 'art-title';
+            titleSpan.textContent = art.title;
+            
+            const mediumSpan = document.createElement('div');
+            mediumSpan.className = 'art-medium';
+            mediumSpan.textContent = `${art.medium}, ${art.year}`;
+            
+            const descSpan = document.createElement('div');
+            descSpan.className = 'art-desc';
+            descSpan.textContent = art.desc;
+            
+            infoDiv.appendChild(titleSpan);
+            infoDiv.appendChild(mediumSpan);
+            infoDiv.appendChild(descSpan);
+            
+            artCard.appendChild(img);
+            artCard.appendChild(infoDiv);
+            
+            artCard.addEventListener('click', () => {
+                window.open(img.src, '_blank');
+            });
+            
+            container.appendChild(artCard);
+        });
+        
+        console.log(`✅ Created ${container.children.length} art cards`);
+    }
+    
+    // Анимация секций
+    document.querySelectorAll('section').forEach((sec, index) => {
+        sec.style.opacity = '1';
+        sec.style.transform = 'translateY(0)';
+        sec.classList.add('visible');
+        console.log(`Section ${index + 1} made visible`);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section').forEach(sec => observer.observe(sec));
+
+    console.log('✅ All done!');
+</script>
+
+</body>
+</html>
