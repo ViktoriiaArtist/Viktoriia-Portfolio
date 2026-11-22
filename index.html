@@ -9,7 +9,7 @@
     
     <style>
         :root {
-            --accent: #d4a5a5;      /* Нежный розово-золотой акцент */
+            --accent: #d4a5a5;     
             --accent-dark: #b88888;
             --text: #2d2a2e;
             --text-light: #6a5e6b;
@@ -167,7 +167,7 @@
             margin: 0.8rem auto 0;
         }
 
-        /* Сетка для работ — 4 колонки на больших, 3 на средних, 2 на маленьких */
+        /* Сетка для работ */
         .artworks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -581,7 +581,7 @@
         
        featuredCard.innerHTML = `
             <video class="featured-video" controls playsinline preload="metadata"
-                   poster="images/work_43.jpg">
+                   poster="images/work_43.jpg" controlsList="nofullscreen">
                 <source src="images/sonechko.mp4" type="video/mp4">
                  Ihr Browser unterstützt keine Videos.
             </video>
