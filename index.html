@@ -297,6 +297,81 @@
             background: var(--accent);
             border-radius: 10px;
         }
+
+        /* Карточка видео */
+        .art-card--featured {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) 1.6fr;
+            gap: 1rem;
+            padding: 1rem;
+            align-items: stretch;       
+            cursor: default;
+            overflow: visible;            
+        }
+        .art-card--featured:hover {
+            transform: translateY(-4px) scale(1.005);
+        }
+        
+        /* Видео по высоте правой колонки */
+        .featured-video {
+            width: 100%;
+            height: 100%;                  
+            max-height: 620px;          
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            border-radius: 18px;
+            background: #000;
+            display: block;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Правая колонка: две вертикальные картинки в столбик */
+        .featured-side {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            min-width: 0;
+        }
+        .featured-side img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;            
+            border-radius: 16px;
+            display: block;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+        .featured-side img:hover {
+            transform: scale(1.015);
+        }
+        .featured-side .img-drawing-1 {
+            aspect-ratio: 960 / 1280;  
+        }
+        .featured-side .img-drawing-2 {
+            aspect-ratio: 1102 / 1280;    
+        }
+        
+        /* Подпись под композицией */
+        .featured-caption {
+            grid-column: 1 / -1;
+            font-size: 0.82rem;
+            color: #5a4e5b;
+            text-align: center;
+            padding: 0.4rem 0.5rem 0.2rem;
+            font-style: italic;
+        }
+        
+        /* Мобильная адаптация: всё в столбик */
+        @media (max-width: 700px) {
+            .art-card--featured {
+                grid-template-columns: 1fr;
+            }
+            .featured-video {
+                height: auto;
+                max-height: 440px;
+            }
+        }
         
         @media (max-width: 700px) {
             .artworks-grid {
@@ -490,7 +565,30 @@
             ...artworks.slice(0, 2),
             ...artworks.slice(2).reverse()
         ];
+        const featuredCard = document.createElement('div');
+        featuredCard.className = 'art-card art-card--featured';
         
+        featuredCard.innerHTML = `
+            <video class="featured-video" controls playsinline preload="metadata"
+                   poster="images/work_43.jpg">
+                <source src="images/sonechko.mp4" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        
+            <div class="featured-side">
+                <img class="img-drawing-1" src="images/work_43.jpg"
+                     alt="Кошка и пакет с краской" loading="lazy"
+                     onclick="window.open(this.src,'_blank')">
+                <img class="img-drawing-2" src="images/work_44.jpg"
+                     alt="Рисунок кошки" loading="lazy"
+                     onclick="window.open(this.src,'_blank')">
+            </div>
+        
+            <div class="featured-caption">
+                ✦ Sonechko — «Кошка-художница», 2026 ✦
+            </div>
+        `;
+        container.appendChild(featuredCard);
         sortedArtworks.forEach((art) => {
             const artCard = document.createElement('div');
             artCard.className = 'art-card';
